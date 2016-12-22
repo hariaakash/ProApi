@@ -1,0 +1,120 @@
+<div class="wrapper wrapper-content">
+	<div class="container">
+		<!--	Statistics	-->
+		<div class="row">
+			<div class="col-md-3">
+				<div class="widget style1 blue-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4 text-center">
+							<i class="fa fa-server fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Project's </span>
+							<h2 class="font-bold" ng-bind="userData.stats.boxes"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget style1 lazur-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4">
+							<i class="fa fa-database fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Api's </span>
+							<h2 class="font-bold" ng-bind="userData.stats.apis"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget style1 navy-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4">
+							<i class="fa fa-play fa-rotate-270 fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Successful Requests </span>
+							<h2 class="font-bold" ng-bind="userData.stats.success"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget style1 red-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4">
+							<i class="fa fa-play fa-rotate-90 fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Failed Requests </span>
+							<h2 class="font-bold" ng-bind="userData.stats.fail"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br>
+		<!--	Boxes Display	-->
+		<div class="row">
+			<div class="col-md-4">
+				<a ng-click="openModal()">
+					<div id="box-fx" class="ibox animated fadeInDown">
+						<div class="ibox-content text-center">
+							<h2>Create Box</h2>
+							<div class="create_spacer"></div>
+							<i class="fa fa-plus-square fa-5x text-navy"></i>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4" ng-show="userData.boxes" ng-repeat="(key, x) in userData.boxes">
+				<a href="#!/box/{{ key }}">
+					<div id="box-fx" class="ibox animated fadeInDown">
+						<div class="ibox-content">
+							<h2 ng-bind="x.name"></h2>
+							<div class="spacer"></div>
+							<div class="stat-percent-left font-bold text-navy"><i class="fa fa-server fa-2x"></i></div>
+							<div class="stat-percent font-bold text-navy">Box Id: {{ key }}</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Create Box Modal-->
+<div class="modal inmodal fade" tabindex="-1" role="dialog" id="createBoxModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content animated fadeInDown">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i><span class="sr-only">Close</span></button>
+				<i class="fa fa-plus-square modal-icon text-navy"></i>
+				<h4 class="modal-title">Create Box / Project</h4>
+			</div>
+			<div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label>Box Name:</label>
+						<input type="name" ng-model="box.name" placeholder="Enter box name" class="form-control">
+					</div>
+					<div class="form-group">
+						<label>Box ID:</label>
+						<div class="input-group">
+							<span class="input-group-addon">https://proapi.co/{{ userData.info.uname }}/</span>
+							<input type="name" ng-model="box.id" placeholder="Enter box id" class="form-control" required>
+						</div>
+						<span class="help-block m-b-none">Box id should not contain special characters and should be of length atleast 3.</span>
+					</div>
+					<div class="alert alert-danger" ng-show="errDiv" ng-bind="errMsg"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="createBox()">Create</button>
+			</div>
+		</div>
+	</div>
+</div>

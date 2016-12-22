@@ -1,0 +1,166 @@
+<div class="wrapper wrapper-content">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="widget style1 lazur-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4">
+							<i class="fa fa-database fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Api's </span>
+							<h2 class="font-bold" ng-bind="boxData.stats.apis"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget style1 navy-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4">
+							<i class="fa fa-play fa-rotate-270 fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Successful Requests </span>
+							<h2 class="font-bold" ng-bind="userData.stats.success"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget style1 red-bg animated fadeInDown">
+					<div class="row">
+						<div class="col-xs-4">
+							<i class="fa fa-play fa-rotate-90 fa-5x"></i>
+						</div>
+						<div class="col-xs-8 text-right">
+							<span> Failed Requests </span>
+							<h2 class="font-bold" ng-bind="userData.stats.fail"></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<a ng-click="openCreateApiModal()">
+					<div class="widget style1 box-bg animated fadeInDown">
+						<div class="row">
+							<div class="col-xs-4 text-center">
+								<i class="fa fa-plus fa-5x"></i>
+							</div>
+							<div class="col-xs-8 text-center">
+								<h2 class="font-bold">Create</h2>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins animated fadeInDown">
+					<div class="ibox-title navy-bg text-center">
+						<h5>Box Name: {{ boxData.name }}</h5>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-hover margin bottom">
+							<thead>
+								<tr>
+									<th style="width: 3%" class="text-center">#</th>
+									<th class="text-center">Type</th>
+									<th>API Name</th>
+									<th>Link</th>
+									<th>ApiKey</th>
+									<th class="text-center">Info</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="(key,x) in boxData.apis">
+									<td class="text-center">{{ $index + 1 }}</td>
+									<td class="text-center"><span class="label get-label" ng-class="{'get-label': x.type == 'GET', 'post-label': x.type == 'POST'}">{{ x.type }}</span></td>
+									<td>{{ x.name }}</td>
+									<td>https://proapi.co/{{ boxId }}/{{ key }}</td>
+									<td><span class="label url-label" clipboard supported="supported" text="x.apiKey">{{ x.apiKey }}</span></td>
+									<td class="text-center"><i class="fa fa-info"></i></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins animated fadeInDown">
+					<div class="ibox-title navy-bg text-center">
+						<h5>Logs</h5>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-hover margin bottom">
+							<thead>
+								<tr>
+									<th style="width: 3%" class="text-center">#</th>
+									<th class="text-center">Type</th>
+									<th>Link</th>
+									<th>From</th>
+									<th class="text-center">Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="text-center">1</td>
+									<td class="text-center"><span class="label get-label">GET</span></td>
+									<td>http://google.com</td>
+									<td>http://google.com</td>
+									<td class="text-center"><span class="label label-danger">FAIL</span></td>
+								</tr>
+								<tr>
+									<td class="text-center">1</td>
+									<td class="text-center"><span class="label post-label">POST</span></td>
+									<td>http://google.com</td>
+									<td>http://google.com</td>
+									<td class="text-center"><span class="label label-success">SUCCESS</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Create API Modal-->
+<div class="modal inmodal fade" tabindex="-1" role="dialog" id="createApiModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content animated fadeInDown">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i><span class="sr-only">Close</span></button>
+				<i class="fa fa-plus-square modal-icon text-navy"></i>
+				<h4 class="modal-title">Create API for Box with ID: {{ boxId }}</h4>
+			</div>
+			<div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label>API Name:</label>
+						<input type="name" ng-model="apiName" placeholder="Enter API name" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Request Type:</label>
+						<select class="form-control" ng-model="apiType" ng-init="apiType='GET'" ng-options="option for option in type">
+						</select>
+						<span class="help-block m-b-none">Choose the type of http request you want to handle.</span>
+					</div>
+					<div class="form-group">
+						<label>API ID:</label>
+						<div class="input-group">
+							<span class="input-group-addon">https://proapi.co/{{ userData.info.uname }}/{{ boxId }}/</span>
+							<input type="name" ng-model="apiId" placeholder="Enter API id" class="form-control" required>
+						</div>
+						<span class="help-block m-b-none">API name should not contain special characters and should be of length atleast 3.</span>
+					</div>
+					<div class="alert alert-danger" ng-show="errDiv" ng-bind="errMsg"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="createApi()">Create</button>
+			</div>
+		</div>
+	</div>
+</div>
