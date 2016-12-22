@@ -24,7 +24,6 @@ firebase.initializeApp(config);
 
 app.get('/', function (req, res) {
 	res.json('Hola');
-	console.log(hat());
 });
 
 // Create User
@@ -42,6 +41,9 @@ app.post('/api/user/create', function (req, res) {
 						success: 0,
 						fail: 0
 					});
+					var user = firebase.auth().currentUser;
+					console.log(user);
+					user.sendEmailVerification();
 					firebase.database().ref('data/' + result.uid).child('info').set({
 						uname: uname,
 						email: email
@@ -69,6 +71,21 @@ app.post('/api/user/create', function (req, res) {
 	});
 });
 
+// Confirm Email
+app.get('/api/user/create', function (req, res) {
+	var code = req.query.code;
+	firebase.auth().applyActionCode(code).then(function (result) {
+		res.json({
+			status: true
+		})
+	}).catch(function (err) {
+		res.json({
+			status: false,
+			msg: 'Verification Code is Invalid or Expired'
+		})
+	});
+})
+
 // Authenticate User
 app.post('/api/user/auth', function (req, res) {
 	var email = req.body.email;
@@ -76,10 +93,16 @@ app.post('/api/user/auth', function (req, res) {
 	firebase.auth().signInWithEmailAndPassword(email, pass)
 		.then(function () {
 			var user = firebase.auth().currentUser;
-			res.json({
-				status: true,
-				uid: user.uid
-			});
+			if (user.emailVerified)
+				res.json({
+					status: true,
+					uid: user.uid
+				});
+			else
+				res.json({
+					status: false,
+					msg: 'Email not verified, check your mail for more instructions !!'
+				});
 		})
 		.catch(function (error) {
 			var errorCode = error.code;

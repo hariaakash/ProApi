@@ -21,12 +21,12 @@ app.config(function ($routeProvider) {
 			templateUrl: 'pages/register.html',
 			controller: 'regCtrl'
 		})
-		.when('/pass', {
-			templateUrl: 'pages/password.html',
-			controller: 'passCtrl'
+		.when('/acctMgmt', {
+			templateUrl: 'pages/acctMgmt.html',
+			controller: 'acctMgmtCtrl'
 		})
-		.when('/reset', {
-			templateUrl: 'pages/reset.html',
+		.when('/password', {
+			templateUrl: 'pages/password.html',
 			controller: 'passCtrl'
 		})
 		.when('/error', {
@@ -50,7 +50,7 @@ app.controller('globalCtrl', function ($rootScope, $location, $http, $routeParam
 		}).then(function (res) {
 			$rootScope.userData = res.data;
 		}, function () {
-			console.log('Some error occurred !!');
+			alert('Some error occurred, Internet Problem!!');
 		});
 	};
 	$rootScope.checkAuth = function () {
@@ -241,8 +241,8 @@ app.controller('loginCtrl', function ($scope, $http, $ocLazyLoad, $location, $ti
 	};
 });
 
-// Password Reset Page Controller
-app.controller('passCtrl', function ($scope, $rootScope, $routeParams, $http, $ocLazyLoad, $location, $timeout) {
+// Send Password Reset Request Controller
+app.controller('passCtrl', function ($scope, $http, $timeout, $rootScope, $ocLazyLoad, $location) {
 	$rootScope.checkAuth();
 	$ocLazyLoad.load('./js/plugins/sweetalert/sweetalert.min.js');
 	$ocLazyLoad.load('./js/plugins/sweetalert/sweetalert.min.css');
@@ -258,7 +258,7 @@ app.controller('passCtrl', function ($scope, $rootScope, $routeParams, $http, $o
 				if (res.data.status) {
 					swal({
 						title: 'Success',
-						text: 'Email send succefully !!',
+						text: 'Email send successfully !!',
 						type: 'success',
 						showConfirmButton: true
 					}, function () {
@@ -279,11 +279,56 @@ app.controller('passCtrl', function ($scope, $rootScope, $routeParams, $http, $o
 			});
 		}
 	};
+});
+
+// Password Account Management Password & Verify Email Page Controller
+app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http, $ocLazyLoad, $location, $timeout) {
+	$rootScope.checkAuth();
+	$ocLazyLoad.load('./js/plugins/sweetalert/sweetalert.min.js');
+	$ocLazyLoad.load('./js/plugins/sweetalert/sweetalert.min.css');
+	$scope.verifyEmail = function () {
+		if ($scope.code) {
+			$http({
+				method: 'GET',
+				url: 'http://localhost:3000/api/user/create',
+				params: {
+					code: $scope.code
+				}
+			}).then(function (res) {
+				if (res.data.status) {
+					swal({
+						title: 'Success',
+						text: 'Email verified successfully !!',
+						type: 'success',
+						showConfirmButton: true
+					}, function () {
+						$timeout(function () {
+							$location.path('/login').replace();
+						}, 2000);
+					});
+				} else {
+					swal({
+						title: 'Failed',
+						text: res.data.msg,
+						type: 'error',
+						showConfirmButton: true
+					});
+				}
+			}, function () {
+				alert('Some error occurred, Internet Problem!!');
+			});
+		} else {
+			
+		}
+	};
 	$scope.code = $routeParams.oobCode;
+	$scope.mode = $routeParams.mode;
+	if (!($scope.mode == 'resetPassword' || $scope.mode == 'verifyEmail') || !$scope.code) {
+		$location.path('/login?');
+	}
 	$scope.resetPassword = function () {
-		if ($scope.pass1.length >= 8 && $scope.pass2.length >= 8 && $scope.code) {
-			if ($scope.pass1 === $scope.pass2) {
-				console.log()
+		if ($scope.pass1.length >= 8 && $scope.pass2.length >= 8 && $scope.code)
+			if ($scope.pass1 === $scope.pass2)
 				$http({
 					method: 'POST',
 					url: 'http://localhost:3000/api/user/reset',
@@ -293,36 +338,14 @@ app.controller('passCtrl', function ($scope, $rootScope, $routeParams, $http, $o
 					}
 				}).then(function (res) {
 					if (res.data.status)
-						swal({
-							title: 'Success',
-							text: 'Password successfully reset !!',
-							type: 'success',
-							showConfirmButton: true
-						});
+						swal("Success", "Passeord successfully reset.", "success");
 					else
-						swal({
-							title: 'Failed',
-							text: res.data.msg,
-							type: 'error',
-							showConfirmButton: true
-						});
+						swal("Failure", res.data.msg, "error");
 				});
-			} else {
-				swal({
-					title: 'Failed',
-					text: 'Passwords are not same',
-					type: 'error',
-					showConfirmButton: true
-				});
-			}
-		} else {
-			swal({
-				title: 'Failed',
-				text: 'Fields are empty / check password strength',
-				type: 'error',
-				showConfirmButton: true
-			});
-		}
+			else
+				swal("Failure", "Passwords are not same", "error");
+		else
+			swal("Failure", "Fields are empty / check password strength", "error");
 	};
 });
 
