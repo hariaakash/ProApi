@@ -49,9 +49,9 @@
 							</li>
 							<li class="dropdown" ng-show="signStatus">
 								<a aria-expanded="false" id="main-avatar" role="button" class="dropdown-toggle" data-toggle="dropdown">
-									<img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/user-male-icon.png" class="img-circle" width="40px" heigth="40px" /> &nbsp;{{ userData.info.uname }}&nbsp;<span class="caret"></span></a>
+									<img src="img/user.png" class="img-circle" width="40px" heigth="40px" /> &nbsp;{{ userData.info.uname }}&nbsp;<span class="caret"></span></a>
 								<ul role="menu" class="dropdown-menu">
-									<li><a><i class="fa fa-gear"></i>  Settings</a></li>
+									<li><a href="#!/profile"><i class="fa fa-user"></i>  Profile</a></li>
 									<div class="divider"></div>
 									<li><a ng-click="signOut()"><i class="fa fa-sign-out"></i>  Sign Out</a></li>
 								</ul>

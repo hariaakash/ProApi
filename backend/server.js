@@ -226,8 +226,8 @@ app.post('/api/user/box/api', function (req, res) {
 	var type = req.body.type;
 	var aid = req.body.aid;
 	var name = req.body.name;
+	var url = req.body.url;
 	var apiKey = hat();
-	console.log(apiKey);
 	var success = 0;
 	var fail = 0;
 	firebase.database().ref('data/' + uid + '/boxes/' + bid).child('apis').once("value", function (snapshot) {
@@ -235,6 +235,7 @@ app.post('/api/user/box/api', function (req, res) {
 			var data = {
 				name: name,
 				type: type,
+				url: url,
 				apiKey: apiKey,
 				stats: {
 					success: success,
@@ -250,6 +251,8 @@ app.post('/api/user/box/api', function (req, res) {
 				firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/apis/').set(apis);
 			});
 			firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis').child(aid).set(data);
+			var log = 'API with id: ' + aid + ' Created';
+			firebase.database().ref('data/' + uid + '/boxes/' + bid).child('logs').push(log);
 			res.json({
 				status: true
 			});

@@ -60,13 +60,15 @@
 						<h5>Box Name: {{ boxData.name }}</h5>
 					</div>
 					<div class="ibox-content">
-						<table class="table table-hover margin bottom">
+						<h5 ng-show="!boxData.apis" class="text-center">No API's found</h5>
+						<table class="table table-hover margin bottom" ng-show="boxData.apis">
 							<thead>
 								<tr>
 									<th style="width: 3%" class="text-center">#</th>
 									<th class="text-center">Type</th>
 									<th>API Name</th>
-									<th>Link</th>
+									<th>Request Link</th>
+									<th>Host Link</th>
 									<th>ApiKey</th>
 									<th class="text-center">Info</th>
 								</tr>
@@ -77,44 +79,33 @@
 									<td class="text-center"><span class="label get-label" ng-class="{'get-label': x.type == 'GET', 'post-label': x.type == 'POST'}">{{ x.type }}</span></td>
 									<td>{{ x.name }}</td>
 									<td>https://proapi.co/{{ boxId }}/{{ key }}</td>
-									<td><span class="label url-label" clipboard supported="supported" text="x.apiKey">{{ x.apiKey }}</span></td>
-									<td class="text-center"><i class="fa fa-info"></i></td>
+									<td>{{ x.url }}</td>
+									<td><span class="label url-label" clipboard supported="supported" text="x.apiKey" on-copied="copySuccess()">{{ x.apiKey }}</span></td>
+									<td class="text-center"><a ng-click="openViewApiModal(key,x)"><i class="fa fa-info"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-12">
+			<div class="col-lg-4">
 				<div class="ibox float-e-margins animated fadeInDown">
 					<div class="ibox-title navy-bg text-center">
 						<h5>Logs</h5>
 					</div>
 					<div class="ibox-content">
-						<table class="table table-hover margin bottom">
+						<h5 ng-show="!boxData.logs" class="text-center">No Log's found</h5>
+						<table class="table table-hover margin bottom" ng-show="boxData.logs">
 							<thead>
 								<tr>
-									<th style="width: 3%" class="text-center">#</th>
-									<th class="text-center">Type</th>
-									<th>Link</th>
-									<th>From</th>
-									<th class="text-center">Status</th>
+									<th style="width: 20%" class="text-center">#</th>
+									<th>Latest <i class="fa fa-arrow-up"></i></th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td class="text-center">1</td>
-									<td class="text-center"><span class="label get-label">GET</span></td>
-									<td>http://google.com</td>
-									<td>http://google.com</td>
-									<td class="text-center"><span class="label label-danger">FAIL</span></td>
-								</tr>
-								<tr>
-									<td class="text-center">1</td>
-									<td class="text-center"><span class="label post-label">POST</span></td>
-									<td>http://google.com</td>
-									<td>http://google.com</td>
-									<td class="text-center"><span class="label label-success">SUCCESS</span></td>
+								<tr ng-repeat="x in boxData.logs | limitTo: 10">
+									<td class="text-center">{{ $index + 1 }}</td>
+									<td>{{ x }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -135,7 +126,7 @@
 				<h4 class="modal-title">Create API for Box with ID: {{ boxId }}</h4>
 			</div>
 			<div class="modal-body">
-				<form role="form">
+				<form role="form" name="apiForm">
 					<div class="form-group">
 						<label>API Name:</label>
 						<input type="name" ng-model="apiName" placeholder="Enter API name" class="form-control" required>
@@ -147,19 +138,48 @@
 						<span class="help-block m-b-none">Choose the type of http request you want to handle.</span>
 					</div>
 					<div class="form-group">
-						<label>API ID:</label>
+						<label>API ID: "This is the url to which you have to send request"</label>
 						<div class="input-group">
 							<span class="input-group-addon">https://proapi.co/api/{{ userData.info.uname }}/{{ boxId }}/</span>
 							<input type="name" ng-model="apiId" placeholder="Enter API id" class="form-control" required>
 						</div>
-						<span class="help-block m-b-none">API name should not contain special characters and should be of length atleast 3.</span>
+						<span class="help-block m-b-none">API id should not contain special characters and should be of length atleast 3.</span>
 					</div>
+					<div class="form-group">
+						<label>Request URL: "This is the url to which the request will be send to"</label>
+						<input type="url" ng-model="apiUrl" placeholder="Enter url" name="url" class="form-control" required>
+					</div>
+					<span ng-bind="formFill"></span>
 					<div class="alert alert-danger" ng-show="errDiv" ng-bind="errMsg"></div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" ng-click="createApi()">Create</button>
+				<button type="button" class="btn btn-primary" ng-disabled="apiForm.url.$invalid" ng-click="createApi()">Create</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--	View Api Model	-->
+<div class="modal inmodal fade" id="viewApiModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">{{ apiModal.name }}</h4>
+			</div>
+			<div class="modal-body">
+				<h4>API ID: <strong>{{apiModal.aid}}</strong></h4>
+				<h4>Type: <span class="label get-label" ng-class="{'get-label': x.type == 'GET', 'post-label': x.type == 'POST'}">{{ apiModal.type }}</span></h4>
+				<h4>Api Key: <span class="label url-label" clipboard supported="supported" text="x.apiKey" on-copied="copySuccess()">{{ apiModal.apiKey }}</span></h4>
+				<h4>Box ID: <strong>{{ boxId }}</strong></h4>
+				<h4>Request Link: <strong>https://proapi.co/api/{{ userData.info.uname }}/{{ boxId }}/{{ apiModal.aid }}/</strong></h4>
+				<h4>Host Link: <strong>{{ apiModal.url }}</strong></h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger">Delete</button>
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>

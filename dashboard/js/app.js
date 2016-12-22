@@ -29,6 +29,10 @@ app.config(function ($routeProvider) {
 			templateUrl: 'pages/password.html',
 			controller: 'passCtrl'
 		})
+		.when('/profile', {
+			templateUrl: 'pages/profile.html',
+			controller: 'profileCtrl'
+		})
 		.when('/error', {
 			templateUrl: 'pages/error.html'
 		})
@@ -318,7 +322,7 @@ app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http
 				alert('Some error occurred, Internet Problem!!');
 			});
 		} else {
-			
+
 		}
 	};
 	$scope.code = $routeParams.oobCode;
@@ -349,6 +353,11 @@ app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http
 	};
 });
 
+// Profile Controller
+app.controller('profileCtrl', function ($scope, $rootScope, $routeParams, $http, $ocLazyLoad, $location, $timeout) {
+	$rootScope.checkAuth();
+});
+
 // Box Controller
 app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScope, $http, $timeout, $window) {
 	$rootScope.checkAuth();
@@ -365,7 +374,6 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 			}
 		}).then(function (res) {
 			$scope.boxData = res.data;
-			console.log($scope.boxData.apis);
 		}, function () {
 			console.log('Some error occurred !!');
 		});
@@ -375,6 +383,9 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 		$('#createApiModal').modal('show');
 	};
 	$scope.type = ['GET', 'POST', ];
+	$scope.copySuccess = function () {
+		swal("Success", "Copied to Clipboard", "success");
+	};
 	$scope.createApi = function () {
 		if ($scope.apiId.length >= 3 && /^[a-zA-Z]+$/.test($scope.apiId) && $scope.apiName) {
 			$http({
@@ -382,6 +393,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 				url: 'http://localhost:3000/api/user/box/api',
 				data: {
 					name: $scope.apiName,
+					url: $scope.apiUrl,
 					uid: $rootScope.uid,
 					bid: $scope.boxId,
 					type: $scope.apiType,
@@ -419,5 +431,11 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 				showConfirmButton: true
 			});
 		}
+	};
+	$scope.openViewApiModal = function (key, x) {
+		$('#viewApiModal').modal('show');
+		$scope.apiModal = x;
+		$scope.apiModal.aid = key;
+		console.log($scope.apiModal);
 	};
 });
