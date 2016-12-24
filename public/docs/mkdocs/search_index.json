@@ -1,0 +1,29 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Welcome to ProApi Documentation\n\n\nSupercharge your API's with \nProApi\n \n\n\nBoxes\n\n\nBoxes in ProApi are simply projects. Each box contains a group of API's which can be used for a particular project which you are working on hence to make it easy to manage project oriented API's.\nEach box is identified with their own identification name that is Box ID and it is unique to every box created for each user.\nHence each box can be identified like the one below:\n\n\nhttps://proapi.co/api/[uname]/[bid]\n\n\n\n\n\n\nuname\n : username of your account which you have chosen when creating\n\n\n\n\nbid\n : Box ID which is unique to every box created to a particular account\n\n\n\n\n\n\nAPI's\n\n\nEach Box can have API's created and similarily each API can be identified by their unique API ID. API can be of type \nPOST\n or \nGET\n.\n\n\nhttps://proapi.co/api/[uname]/[bid]/[aid]\n\n\n\n\n\n\nuname\n : username of your account which you have chosen when creating\n\n\n\n\nbid\n : Box ID which is unique to every box created to a particular account\n\n\n\n\naid\n : API ID which is unique to every API created.\n\n\n\n\n\n\n\n\nHow to handle requests\n\n\nEach API created contains ApiKey which is used to successfully send a request through our secure gateway. Hence when sending request it should be of the following format.\n\n\nPOST Request : https://proapi.co/api/[uname]/[bid]/[aid]\n\n\n\n\n\n\nBody\n : Body of POST Request should contain apiKey which is unique to each API and the data which you wish to be send through our gateway inside data.\n\n\n\n\napikey: 'APIKEY',\ndata: {\ndata1: 'data1',\ndata2: 'data2'\n}", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#welcome-to-proapi-documentation", 
+            "text": "Supercharge your API's with  ProApi", 
+            "title": "Welcome to ProApi Documentation"
+        }, 
+        {
+            "location": "/#boxes", 
+            "text": "Boxes in ProApi are simply projects. Each box contains a group of API's which can be used for a particular project which you are working on hence to make it easy to manage project oriented API's.\nEach box is identified with their own identification name that is Box ID and it is unique to every box created for each user.\nHence each box can be identified like the one below:  https://proapi.co/api/[uname]/[bid]   uname  : username of your account which you have chosen when creating   bid  : Box ID which is unique to every box created to a particular account", 
+            "title": "Boxes"
+        }, 
+        {
+            "location": "/#apis", 
+            "text": "Each Box can have API's created and similarily each API can be identified by their unique API ID. API can be of type  POST  or  GET .  https://proapi.co/api/[uname]/[bid]/[aid]   uname  : username of your account which you have chosen when creating   bid  : Box ID which is unique to every box created to a particular account   aid  : API ID which is unique to every API created.", 
+            "title": "API's"
+        }, 
+        {
+            "location": "/#how-to-handle-requests", 
+            "text": "Each API created contains ApiKey which is used to successfully send a request through our secure gateway. Hence when sending request it should be of the following format.  POST Request : https://proapi.co/api/[uname]/[bid]/[aid]   Body  : Body of POST Request should contain apiKey which is unique to each API and the data which you wish to be send through our gateway inside data.   apikey: 'APIKEY',\ndata: {\ndata1: 'data1',\ndata2: 'data2'\n}", 
+            "title": "How to handle requests"
+        }
+    ]
+}
