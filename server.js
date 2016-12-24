@@ -22,10 +22,6 @@ app.use(cors());
 app.use(express.static('public'));
 firebase.initializeApp(config);
 
-// Home Page
-app.get('/', function (req, res) {
-	res.json('Hola');
-});
 
 // Create User
 app.post('/root/user/create', function (req, res) {
