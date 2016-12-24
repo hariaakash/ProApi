@@ -22,7 +22,7 @@
 						</div>
 						<div class="col-xs-8 text-right">
 							<span> Successful Requests </span>
-							<h2 class="font-bold" ng-bind="userData.stats.success"></h2>
+							<h2 class="font-bold" ng-bind="boxData.stats.success"></h2>
 						</div>
 					</div>
 				</div>
@@ -35,7 +35,7 @@
 						</div>
 						<div class="col-xs-8 text-right">
 							<span> Failed Requests </span>
-							<h2 class="font-bold" ng-bind="userData.stats.fail"></h2>
+							<h2 class="font-bold" ng-bind="boxData.stats.fail"></h2>
 						</div>
 					</div>
 				</div>
@@ -57,7 +57,7 @@
 			<div class="col-lg-12">
 				<div class="ibox float-e-margins animated fadeInDown">
 					<div class="ibox-title navy-bg text-center">
-						<h5>Box Name: {{ boxData.name }}</h5>
+						<h5>Box Name: {{ boxData.name }} & Box ID: {{ boxId }}</h5>
 					</div>
 					<div class="ibox-content">
 						<h5 ng-show="!boxData.apis" class="text-center">No API's found</h5>
@@ -76,12 +76,12 @@
 							<tbody>
 								<tr ng-repeat="(key,x) in boxData.apis">
 									<td class="text-center">{{ $index + 1 }}</td>
-									<td class="text-center"><span class="label get-label" ng-class="{'get-label': x.type == 'GET', 'post-label': x.type == 'POST'}">{{ x.type }}</span></td>
+									<td class="text-center"><span class="label" ng-class="{'get-label': x.type == 'GET', 'post-label': x.type == 'POST'}">{{ x.type }}</span></td>
 									<td>{{ x.name }}</td>
-									<td>https://proapi.co/{{ boxId }}/{{ key }}</td>
+									<td>https://proapi.co/api/{{ userData.info.uname }}/{{ boxId }}/{{ key }}</td>
 									<td>{{ x.url }}</td>
 									<td><span class="label url-label" clipboard supported="supported" text="x.apiKey" on-copied="copySuccess()">{{ x.apiKey }}</span></td>
-									<td class="text-center"><a ng-click="openViewApiModal(key,x)"><i class="fa fa-info"></i></a></td>
+									<td class="text-center"><button class="btn btn-primary dim" type="button" ng-click="openViewApiModal(key,x)"><i class="fa fa-external-link"></i> Manage</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -103,12 +103,22 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="x in boxData.logs | limitTo: 10">
+								<tr ng-repeat="(key,x) in boxData.logs | limitTo: 5">
 									<td class="text-center">{{ $index + 1 }}</td>
 									<td>{{ x }}</td>
 								</tr>
 							</tbody>
 						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-8">
+				<div class="ibox float-e-margins animated fadeInDown">
+					<div class="ibox-title navy-bg text-center">
+						<h5>Manage Box</h5>
+					</div>
+					<div class="ibox-content">
+						<button type="button" class="btn btn-block btn-danger" ng-click="openDeleteBoxModal()"><i class="fa fa-trash-o"></i> Delete Box</button>
 					</div>
 				</div>
 			</div>
@@ -161,24 +171,68 @@
 	</div>
 </div>
 
-<!--	View Api Model	-->
+<!--	View Api Modal	-->
 <div class="modal inmodal fade" id="viewApiModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<div class="modal-header navy-bg">
+				<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close" aria-hidden="true"></i><span class="sr-only">Close</span></button>
 				<h4 class="modal-title">{{ apiModal.name }}</h4>
 			</div>
 			<div class="modal-body">
 				<h4>API ID: <strong>{{apiModal.aid}}</strong></h4>
-				<h4>Type: <span class="label get-label" ng-class="{'get-label': x.type == 'GET', 'post-label': x.type == 'POST'}">{{ apiModal.type }}</span></h4>
+				<h4>Type: <span class="label get-label" ng-class="{'get-label': apiModal.type == 'GET', 'post-label': apiModal.type == 'POST'}">{{ apiModal.type }}</span></h4>
 				<h4>Api Key: <span class="label url-label" clipboard supported="supported" text="x.apiKey" on-copied="copySuccess()">{{ apiModal.apiKey }}</span></h4>
 				<h4>Box ID: <strong>{{ boxId }}</strong></h4>
 				<h4>Request Link: <strong>https://proapi.co/api/{{ userData.info.uname }}/{{ boxId }}/{{ apiModal.aid }}/</strong></h4>
 				<h4>Host Link: <strong>{{ apiModal.url }}</strong></h4>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger">Delete</button>
+				<button type="button" class="btn btn-danger" ng-click="openDeleteApiModal()">Delete</button>
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--	Delete Api Modal	-->
+<div class="modal inmodal fade" id="deleteApiModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header red-bg">
+				<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close" aria-hidden="true"></i><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Delete {{ apiModal.name }}</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group" name="deleteForm">
+					<label>To delete your api, type your api's id : <span class="label label-danger">{{ apiModal.aid }}</span></label>
+					<input type="name" ng-model="apiId" placeholder="Enter API id" class="form-control" required>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" ng-disabled="apiId != apiModal.aid" ng-click="deleteApi()">Confirm</button>
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--	Delete Box Modal	-->
+<div class="modal inmodal fade" id="deleteBoxModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header red-bg">
+				<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close" aria-hidden="true"></i><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Delete Box: {{ boxData.name }} </h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group" name="deleteForm">
+					<label>To delete your box, type your box's id : <span class="label label-danger">{{ boxId }}</span></label>
+					<input type="name" ng-model="bId" placeholder="Enter Box id" class="form-control" required>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" ng-disabled="bId != boxId" ng-click="deleteBox()">Confirm</button>
 				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
 			</div>
 		</div>

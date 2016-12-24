@@ -2059,10 +2059,6 @@ div.dt-button-info {
 	user-select: none;
 }
 
-.pace-inactive {
-	display: none;
-}
-
 .pace .pace-progress {
 	background: #1ab394;
 	position: fixed;
@@ -2070,7 +2066,7 @@ div.dt-button-info {
 	top: 0;
 	right: 100%;
 	width: 100%;
-	height: 2px;
+	height: 1%;
 }
 
 .pace-inactive {

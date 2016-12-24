@@ -9,7 +9,7 @@
 							<i class="fa fa-server fa-5x"></i>
 						</div>
 						<div class="col-xs-8 text-right">
-							<span> Project's </span>
+							<span> Box's / Project's </span>
 							<h2 class="font-bold" ng-bind="userData.stats.boxes"></h2>
 						</div>
 					</div>
@@ -95,16 +95,16 @@
 				<h4 class="modal-title">Create Box / Project</h4>
 			</div>
 			<div class="modal-body">
-				<form role="form">
+				<form role="form" name="createBoxForm">
 					<div class="form-group">
 						<label>Box Name:</label>
-						<input type="name" ng-model="box.name" placeholder="Enter box name" class="form-control">
+						<input type="name" ng-model="box.name" placeholder="Enter box name" class="form-control" ng-minlength="5" ng-maxlength="16" required>
 					</div>
 					<div class="form-group">
 						<label>Box ID:</label>
 						<div class="input-group">
 							<span class="input-group-addon">https://proapi.co/api/{{ userData.info.uname }}/</span>
-							<input type="name" ng-model="box.id" placeholder="Enter box id" class="form-control" required>
+							<input type="name" ng-model="box.id" placeholder="Enter box id" class="form-control" required ng-minlength="3" ng-maxlength="8">
 						</div>
 						<span class="help-block m-b-none">Box id should not contain special characters and should be of length atleast 3.</span>
 					</div>
@@ -113,7 +113,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" ng-click="createBox()">Create</button>
+				<button type="button" class="btn btn-primary" ng-disabled="createBoxForm.$invalid" ng-click="createBox()">Create</button>
 			</div>
 		</div>
 	</div>

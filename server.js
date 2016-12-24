@@ -1,8 +1,8 @@
 var port = process.env.PORT || 3000;
 var express = require('express');
 var app = express();
-var http = require('http');
 var morgan = require('morgan');
+var request = require('request');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var firebase = require('firebase');
@@ -19,15 +19,16 @@ var config = {
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static('public'));
 firebase.initializeApp(config);
 
-
+// Home Page
 app.get('/', function (req, res) {
 	res.json('Hola');
 });
 
 // Create User
-app.post('/api/user/create', function (req, res) {
+app.post('/root/user/create', function (req, res) {
 	var email = req.body.email;
 	var pass = req.body.pass;
 	var uname = req.body.uname;
@@ -72,7 +73,7 @@ app.post('/api/user/create', function (req, res) {
 });
 
 // Confirm Email
-app.get('/api/user/create', function (req, res) {
+app.get('/root/user/create', function (req, res) {
 	var code = req.query.code;
 	firebase.auth().applyActionCode(code).then(function (result) {
 		res.json({
@@ -87,7 +88,7 @@ app.get('/api/user/create', function (req, res) {
 })
 
 // Authenticate User
-app.post('/api/user/auth', function (req, res) {
+app.post('/root/user/auth', function (req, res) {
 	var email = req.body.email;
 	var pass = req.body.pass;
 	firebase.auth().signInWithEmailAndPassword(email, pass)
@@ -119,7 +120,7 @@ app.post('/api/user/auth', function (req, res) {
 });
 
 // Request Password Reset
-app.get('/api/user/pass', function (req, res) {
+app.get('/root/user/pass', function (req, res) {
 	var email = req.query.email;
 	firebase.auth().sendPasswordResetEmail(email)
 		.then(function () {
@@ -136,7 +137,7 @@ app.get('/api/user/pass', function (req, res) {
 });
 
 // Reset Password
-app.post('/api/user/reset', function (req, res) {
+app.post('/root/user/reset', function (req, res) {
 	var code = req.body.code;
 	var pass = req.body.pass;
 	console.log(code + '' + pass);
@@ -155,7 +156,7 @@ app.post('/api/user/reset', function (req, res) {
 });
 
 // Get User Data
-app.get('/api/user/data', function (req, res) {
+app.get('/root/user/data', function (req, res) {
 	var uid = req.query.uid;
 	if (uid)
 		firebase.database().ref('data').child(uid).once("value", function (snapshot) {
@@ -169,7 +170,7 @@ app.get('/api/user/data', function (req, res) {
 });
 
 // Create Box
-app.post('/api/user/box', function (req, res) {
+app.post('/root/user/box', function (req, res) {
 	var uid = req.body.uid;
 	var name = req.body.name;
 	var id = req.body.id;
@@ -204,8 +205,22 @@ app.post('/api/user/box', function (req, res) {
 	});
 });
 
+// Delete Box
+app.post('/root/user/box/delete', function (req, res) {
+	var uid = req.body.uid;
+	var bid = req.body.bid;
+	firebase.database().ref('data/' + uid + '/stats/boxes/').once("value", function (snapshot) {
+		var boxes = snapshot.val() - 1;
+		firebase.database().ref('data/' + uid + '/stats/boxes/').set(boxes);
+	});
+	firebase.database().ref('data/' + uid + '/boxes/').child(bid).remove();
+	res.json({
+		status: true
+	});
+});
+
 // Get Box Data
-app.get('/api/user/box', function (req, res) {
+app.get('/root/user/box', function (req, res) {
 	var uid = req.query.uid;
 	var bid = req.query.bid;
 	if (uid && bid)
@@ -220,7 +235,7 @@ app.get('/api/user/box', function (req, res) {
 });
 
 // Create API
-app.post('/api/user/box/api', function (req, res) {
+app.post('/root/user/box/api', function (req, res) {
 	var uid = req.body.uid;
 	var bid = req.body.bid;
 	var type = req.body.type;
@@ -265,6 +280,130 @@ app.post('/api/user/box/api', function (req, res) {
 	});
 });
 
+// Delete API
+app.post('/root/user/box/api/delete', function (req, res) {
+	var uid = req.body.uid;
+	var bid = req.body.bid;
+	var aid = req.body.aid;
+	firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/apis/').once("value", function (snapshot) {
+		var apis = snapshot.val() - 1;
+		firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/apis/').set(apis);
+	});
+	firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/').child(aid).remove();
+	var log = 'API with id: ' + aid + ' Deleted';
+	firebase.database().ref('data/' + uid + '/boxes/' + bid).child('logs').push(log);
+	res.json({
+		status: true
+	});
+});
+
+// POST API Request Handlers
+app.post('/api/:uname/:bid/:aid', function (req, res) {
+	var uname = req.params.uname;
+	var bid = req.params.bid;
+	var aid = req.params.aid;
+	var data = req.body.data;
+	var req_apiKey = req.body.apiKey;
+	var status = 0;
+	var uid;
+	firebase.database().ref('users/').child(uname).once("value", function (snapshot) {
+		uid = snapshot.val();
+		firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/').child(aid).once("value", function (snap) {
+			var snap = snap.val();
+			var res_apiKey = snap.apiKey;
+			if (uid && data && req_apiKey && res_apiKey && req_apiKey == res_apiKey) {
+				if (snap.type == 'POST') {
+					request({
+						url: snap.url,
+						method: snap.type,
+						json: true,
+						body: data
+					}, function (error, response, body) {
+						if (response.statusCode == 200) {
+							res.json(response.body);
+							status = 1;
+							setStatus();
+						} else {
+							status = 0;
+							setStatus();
+							res.json({
+								status: false,
+								msg: 'Bad Response Encountered'
+							})
+						}
+					});
+				} else {
+					var params = Object.keys(data).map(function (k) {
+						return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+					}).join('&');
+					request({
+						url: snap.url,
+						qs: data,
+						method: snap.type
+					}, function (error, response, body) {
+						if (response.statusCode == 200) {
+							status = 1;
+							setStatus();
+							res.json(response.body);
+						} else {
+							status = 0;
+							setStatus();
+							res.json({
+								status: false,
+								msg: 'Bad Response Encountered'
+							})
+						}
+					});
+				}
+			} else {
+				res.json({
+					status: false,
+					msg: 'Data is insufficient or wrong !!'
+				});
+			}
+		});
+	});
+
+	function setStatus() {
+		if (status == 1) {
+			firebase.database().ref('data/' + uid + '/stats/success/').once("value", function (snapshot) {
+				var success = snapshot.val() + 1;
+				firebase.database().ref('data/' + uid + '/stats/success/').set(success);
+			});
+			firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/success/').once("value", function (snapshot) {
+				var success = snapshot.val() + 1;
+				firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/success/').set(success);
+			});
+			firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/' + aid + '/stats/success/').once("value", function (snapshot) {
+				var success = snapshot.val() + 1;
+				firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/' + aid + '/stats/success/').set(success);
+			});
+			console.log('Success');
+		} else {
+			firebase.database().ref('data/' + uid + '/stats/fail/').once("value", function (snapshot) {
+				var fail = snapshot.val() + 1;
+				firebase.database().ref('data/' + uid + '/stats/fail/').set(fail);
+			});
+			firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/fail/').once("value", function (snapshot) {
+				var fail = snapshot.val() + 1;
+				firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/fail/').set(fail);
+			});
+			firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/' + aid + '/stats/fail/').once("value", function (snapshot) {
+				var fail = snapshot.val() + 1;
+				firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/' + aid + '/stats/fail/').set(fail);
+			});
+			console.log('Fail');
+		}
+	}
+});
+
+app.post('/root/qq', function (req, res) {
+	res.json(req.body);
+});
+
+app.get('/root/qq', function (req, res) {
+	res.json(req.query);
+});
 
 app.listen(port);
 console.log('Server running on port: ' + port);

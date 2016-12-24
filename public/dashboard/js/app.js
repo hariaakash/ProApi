@@ -47,7 +47,7 @@ app.controller('globalCtrl', function ($rootScope, $location, $http, $routeParam
 	$rootScope.getUserBoxes = function () {
 		$http({
 			method: 'GET',
-			url: 'http://localhost:3000/api/user/data',
+			url: 'http://localhost:3000/root/user/data',
 			params: {
 				'uid': $rootScope.uid
 			}
@@ -98,12 +98,12 @@ app.controller('homeCtrl', function ($scope, $http, $ocLazyLoad, $location, $tim
 		$('#createBoxModal').modal('show');
 	};
 	$scope.createBox = function () {
-		if ($scope.box.id.length >= 3 && /^[a-zA-Z]+$/.test($scope.box.id) && $scope.box.name) {
-			$scope.errDiv = false;
+		console.log('qq');
+		if (/^[a-zA-Z]+$/.test($scope.box.id)) {
 			$scope.box.uid = $rootScope.uid;
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/api/user/box',
+				url: 'http://localhost:3000/root/user/box',
 				data: $scope.box
 			}).then(function (res) {
 				if (res.data.status == true) {
@@ -131,8 +131,7 @@ app.controller('homeCtrl', function ($scope, $http, $ocLazyLoad, $location, $tim
 				swal("Fail", "Some error occurred, try again.", "error");
 			});
 		} else {
-			$scope.errDiv = true;
-			$scope.errMsg = 'Check your input';
+			swal("Fail", "Check your input.", "error");
 		}
 	};
 });
@@ -156,7 +155,7 @@ app.controller('regCtrl', function ($scope, $http, $ocLazyLoad, $location, $time
 					$scope.data.uname = $scope.user.uname;
 					$http({
 						method: 'POST',
-						url: 'http://localhost:3000/api/user/create',
+						url: 'http://localhost:3000/root/user/create',
 						data: $scope.data
 					}).then(function (res) {
 						if (res.data.status == true) {
@@ -210,7 +209,7 @@ app.controller('loginCtrl', function ($scope, $http, $ocLazyLoad, $location, $ti
 			$scope.errDiv = false;
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/api/user/auth',
+				url: 'http://localhost:3000/root/user/auth',
 				data: $scope.user
 			}).then(function (res) {
 				if (res.data.status == true)
@@ -254,7 +253,7 @@ app.controller('passCtrl', function ($scope, $http, $timeout, $rootScope, $ocLaz
 		if ($scope.resetEmail) {
 			$http({
 				method: 'GET',
-				url: 'http://localhost:3000/api/user/pass',
+				url: 'http://localhost:3000/root/user/pass',
 				params: {
 					'email': $scope.resetEmail
 				}
@@ -294,7 +293,7 @@ app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http
 		if ($scope.code) {
 			$http({
 				method: 'GET',
-				url: 'http://localhost:3000/api/user/create',
+				url: 'http://localhost:3000/root/user/create',
 				params: {
 					code: $scope.code
 				}
@@ -335,7 +334,7 @@ app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http
 			if ($scope.pass1 === $scope.pass2)
 				$http({
 					method: 'POST',
-					url: 'http://localhost:3000/api/user/reset',
+					url: 'http://localhost:3000/root/user/reset',
 					data: {
 						code: $scope.code,
 						pass: $scope.pass1
@@ -359,7 +358,7 @@ app.controller('profileCtrl', function ($scope, $rootScope, $routeParams, $http,
 });
 
 // Box Controller
-app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScope, $http, $timeout, $window) {
+app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScope, $http, $timeout, $window, $location) {
 	$rootScope.checkAuth();
 	$ocLazyLoad.load('./js/plugins/sweetalert/sweetalert.min.js');
 	$ocLazyLoad.load('./js/plugins/sweetalert/sweetalert.min.css');
@@ -367,7 +366,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 	$scope.getUserBox = function () {
 		$http({
 			method: 'GET',
-			url: 'http://localhost:3000/api/user/box',
+			url: 'http://localhost:3000/root/user/box',
 			params: {
 				uid: $rootScope.uid,
 				bid: $scope.boxId
@@ -390,7 +389,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 		if ($scope.apiId.length >= 3 && /^[a-zA-Z]+$/.test($scope.apiId) && $scope.apiName) {
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/api/user/box/api',
+				url: 'http://localhost:3000/root/user/box/api',
 				data: {
 					name: $scope.apiName,
 					url: $scope.apiUrl,
@@ -437,5 +436,67 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 		$scope.apiModal = x;
 		$scope.apiModal.aid = key;
 		console.log($scope.apiModal);
+	};
+	$scope.openDeleteApiModal = function () {
+		$('#viewApiModal').modal('hide');
+		$('#deleteApiModal').modal('show');
+	};
+	$scope.openDeleteBoxModal = function () {
+		$('#deleteBoxModal').modal('show');
+	};
+	$scope.deleteBox = function () {
+		$http({
+			method: 'POST',
+			url: 'http://localhost:3000/root/user/box/delete',
+			data: {
+				uid: $rootScope.uid,
+				bid: $scope.boxId
+			}
+		}).then(function (res) {
+			if (res.data.status == true) {
+				$('#deleteBoxModal').modal('hide');
+				swal({
+					title: 'Success',
+					text: 'Box deleted Successfully!!',
+					type: 'success',
+					timer: 1000
+				});
+				$timeout(function () {
+					$location.path('/home')
+				}, 2000);
+			} else {
+				swal("Failure", "Some error occurred, try again.", "error");
+			}
+		}, function (res) {
+			swal("Failure", "Some error occurred, try again.", "error");
+		});
+	};
+	$scope.deleteApi = function () {
+		$http({
+			method: 'POST',
+			url: 'http://localhost:3000/root/user/box/api/delete',
+			data: {
+				uid: $rootScope.uid,
+				bid: $scope.boxId,
+				aid: $scope.apiId
+			}
+		}).then(function (res) {
+			if (res.data.status == true) {
+				$('#deleteApiModal').modal('hide');
+				swal({
+					title: 'Success',
+					text: 'Api deleted Successfully!!',
+					type: 'success',
+					timer: 1000
+				});
+				$timeout(function () {
+					$window.location.reload();
+				}, 2000);
+			} else {
+				swal("Failure", "Some error occurred, try again.", "error");
+			}
+		}, function (res) {
+			swal("Failure", "Some error occurred, try again.", "error");
+		});
 	};
 });
