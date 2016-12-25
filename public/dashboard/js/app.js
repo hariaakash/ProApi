@@ -47,7 +47,7 @@ app.controller('globalCtrl', function ($rootScope, $location, $http, $routeParam
 	$rootScope.getUserBoxes = function () {
 		$http({
 			method: 'GET',
-			url: 'https://proapi.co/root/user/data',
+			url: 'http://localhost:3000/root/user/data',
 			params: {
 				'uid': $rootScope.uid
 			}
@@ -68,7 +68,7 @@ app.controller('globalCtrl', function ($rootScope, $location, $http, $routeParam
 			$rootScope.uid = '';
 			$rootScope.signStatus = false;
 			var path = $location.path();
-			if (path == '/home')
+			if (path == '/home' || path == '/box/' + $routeParams.boxid)
 				$location.path('/login').replace();
 		}
 	};
@@ -103,7 +103,7 @@ app.controller('homeCtrl', function ($scope, $http, $ocLazyLoad, $location, $tim
 			$scope.box.uid = $rootScope.uid;
 			$http({
 				method: 'POST',
-				url: 'https://proapi.co/root/user/box',
+				url: 'http://localhost:3000/root/user/box',
 				data: $scope.box
 			}).then(function (res) {
 				if (res.data.status == true) {
@@ -155,7 +155,7 @@ app.controller('regCtrl', function ($scope, $http, $ocLazyLoad, $location, $time
 					$scope.data.uname = $scope.user.uname;
 					$http({
 						method: 'POST',
-						url: 'https://proapi.co/root/user/create',
+						url: 'http://localhost:3000/root/user/create',
 						data: $scope.data
 					}).then(function (res) {
 						if (res.data.status == true) {
@@ -209,7 +209,7 @@ app.controller('loginCtrl', function ($scope, $http, $ocLazyLoad, $location, $ti
 			$scope.errDiv = false;
 			$http({
 				method: 'POST',
-				url: 'https://proapi.co/root/user/auth',
+				url: 'http://localhost:3000/root/user/auth',
 				data: $scope.user
 			}).then(function (res) {
 				if (res.data.status == true)
@@ -253,7 +253,7 @@ app.controller('passCtrl', function ($scope, $http, $timeout, $rootScope, $ocLaz
 		if ($scope.resetEmail) {
 			$http({
 				method: 'GET',
-				url: 'https://proapi.co/root/user/pass',
+				url: 'http://localhost:3000/root/user/pass',
 				params: {
 					'email': $scope.resetEmail
 				}
@@ -293,7 +293,7 @@ app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http
 		if ($scope.code) {
 			$http({
 				method: 'GET',
-				url: 'https://proapi.co/root/user/create',
+				url: 'http://localhost:3000/root/user/create',
 				params: {
 					code: $scope.code
 				}
@@ -334,7 +334,7 @@ app.controller('acctMgmtCtrl', function ($scope, $rootScope, $routeParams, $http
 			if ($scope.pass1 === $scope.pass2)
 				$http({
 					method: 'POST',
-					url: 'https://proapi.co/root/user/reset',
+					url: 'http://localhost:3000/root/user/reset',
 					data: {
 						code: $scope.code,
 						pass: $scope.pass1
@@ -366,7 +366,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 	$scope.getUserBox = function () {
 		$http({
 			method: 'GET',
-			url: 'https://proapi.co/root/user/box',
+			url: 'http://localhost:3000/root/user/box',
 			params: {
 				uid: $rootScope.uid,
 				bid: $scope.boxId
@@ -389,7 +389,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 		if ($scope.apiId.length >= 3 && /^[a-zA-Z]+$/.test($scope.apiId) && $scope.apiName) {
 			$http({
 				method: 'POST',
-				url: 'https://proapi.co/root/user/box/api',
+				url: 'http://localhost:3000/root/user/box/api',
 				data: {
 					name: $scope.apiName,
 					url: $scope.apiUrl,
@@ -447,7 +447,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 	$scope.deleteBox = function () {
 		$http({
 			method: 'POST',
-			url: 'https://proapi.co/root/user/box/delete',
+			url: 'http://localhost:3000/root/user/box/delete',
 			data: {
 				uid: $rootScope.uid,
 				bid: $scope.boxId
@@ -474,7 +474,7 @@ app.controller('boxCtrl', function ($scope, $routeParams, $ocLazyLoad, $rootScop
 	$scope.deleteApi = function () {
 		$http({
 			method: 'POST',
-			url: 'https://proapi.co/root/user/box/api/delete',
+			url: 'http://localhost:3000/root/user/box/api/delete',
 			data: {
 				uid: $rootScope.uid,
 				bid: $scope.boxId,
