@@ -68,7 +68,7 @@ app.controller('globalCtrl', function ($rootScope, $location, $http, $routeParam
 			$rootScope.uid = '';
 			$rootScope.signStatus = false;
 			var path = $location.path();
-			if (path == '/home')
+			if (path == '/home' || path == '/box/' + $routeParams.boxid)
 				$location.path('/login').replace();
 		}
 	};
