@@ -285,6 +285,10 @@ app.post('/root/user/box/api/delete', function (req, res) {
 		var apis = snapshot.val() - 1;
 		firebase.database().ref('data/' + uid + '/boxes/' + bid + '/stats/apis/').set(apis);
 	});
+	firebase.database().ref('data/' + uid + '/stats/apis/').once("value", function (snapshot) {
+		var apis = snapshot.val() - 1;
+		firebase.database().ref('data/' + uid + '/stats/apis/').set(apis);
+	});
 	firebase.database().ref('data/' + uid + '/boxes/' + bid + '/apis/').child(aid).remove();
 	var log = 'API with id: ' + aid + ' Deleted';
 	firebase.database().ref('data/' + uid + '/boxes/' + bid).child('logs').push(log);
