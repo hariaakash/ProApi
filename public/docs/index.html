@@ -4,13 +4,17 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+
 	<title>ProApi Documentation</title>
+
 	<meta property="og:url" content="None">
 	<meta property="og:title" content="ProApi Documentation">
 	<meta property="og:image" content="None/./">
 	<meta name="apple-mobile-web-app-title" content="ProApi Documentation">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
 	<link rel="shortcut icon" type="image/x-icon" href="./assets/images/favicon-e565ddfa3b.ico">
 	<link rel="icon" type="image/x-icon" href="./assets/images/favicon-e565ddfa3b.ico">
 	<style>
@@ -30,17 +34,18 @@
 		input {
 			font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 		}
-		
 		pre,
 		code {
 			font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
 		}
-
 	</style>
 	<script src="./assets/javascripts/modernizr-4ab42b99fd.js"></script>
+
 </head>
 
-<body class=" ">
+
+
+<body>
 
 	<div class="backdrop">
 		<div class="backdrop-paper"></div>
@@ -52,20 +57,13 @@
 		<nav aria-label="Header">
 			<div class="bar default">
 				<div class="button button-menu" role="button" aria-label="Menu">
-					<label class="toggle-button icon icon-menu" for="toggle-drawer">
-        <span></span>
-      </label>
+					<label class="toggle-button icon icon-menu" for="toggle-drawer"></label>
 				</div>
 				<div class="stretch">
 					<div class="title">
-
-						<span class="path">
-            
-          </span> ProApi Documentation
+						<a href="#">ProApi Documentation</a>
 					</div>
 				</div>
-
-
 				<div class="button button-search" role="button" aria-label="Search">
 					<label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
 				</div>
@@ -86,22 +84,11 @@
 		</nav>
 	</header>
 	<main class="main">
-
 		<div class="drawer">
 			<nav aria-label="Navigation">
-
 				<a href="/" class="project">
 					<div class="banner">
-
-						<div class="name">
-							<strong>
-          ProApi Documentation
-          <span class="version">
-            
-          </span>
-        </strong>
-
-						</div>
+						<div class="name"><strong>ProApi Documentation</strong></div>
 					</div>
 				</a>
 				<div class="scrollable">
@@ -119,6 +106,9 @@
 										</li>
 										<li class="anchor">
 											<a title="How to handle requests" href="#how-to-handle-requests">How to handle requests</a>
+										</li>
+										<li class="anchor">
+											<a title="Whitelisting" href="#whitelisting">Whitelisting</a>
 										</li>
 									</ul>
 								</li>
@@ -157,14 +147,19 @@
 				<p>Each API created contains ApiKey which is used to successfully send a request through our secure gateway. Hence when sending request it should be of the following format.</p>
 				<pre><code>POST Request : https://proapi.co/api/[uname]/[bid]/[aid]</code></pre>
 				<blockquote>
-					<p><strong>Body</strong> : Body of POST Request should contain apiKey which is unique to each API and the data which you wish to be send through our gateway inside data.</p>
+					<p><strong>Header</strong> : Header of POST Request should contain apiKey which is unique to each API.</p>
 				</blockquote>
-				<pre><code>apikey: 'APIKEY',
-data: {
-data1: 'data1',
+				<pre><code>apikey: 'APIKEY'</code></pre>
+				<blockquote>
+					<p><strong>Body</strong> : The data which you wish to be send through our gateway inside data.</p>
+				</blockquote>
+				<pre><code>data1: 'data1',
 data2: 'data2'
-}
 </code></pre>
+
+				<h2 id="whitelisting">Whitelisting</h2>
+				<p>In cases where you want to whitelist the domain from which the API's are being send, then you can use the one below.</p>
+				<pre><code>proapi.co</code></pre>
 
 				<footer class="footer">
 
@@ -184,7 +179,6 @@ data2: 'data2'
 	<script>
 		var base_url = '.';
 		var repo_id = '';
-
 	</script>
 	<script src="./assets/javascripts/application-997097ee0c.js"></script>
 

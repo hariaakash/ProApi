@@ -1,8 +1,8 @@
 <div class="wrapper wrapper-content">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-4">
-				<div class="ibox float-e-margins">
+			<div class="col-sm-4">
+				<div class="ibox float-e-margins animated fadeInDown">
 					<div class="ibox-title navy-bg">
 						<h5>Profile</h5>
 					</div>
@@ -13,13 +13,41 @@
 						<div class="ibox-content profile-content">
 							<h4>Username: <strong>{{ userData.info.uname }}</strong></h4>
 							<h4>Email: <strong>{{ userData.info.email }}</strong></h4>
+							<h4>Country: <strong>{{ userData.info.country }}</strong></h4>
+							<h4>Timezone: <strong>{{ userData.info.timezone }}</strong></h4>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-8">
-				<div class="ibox float-e-margins">
-					<h1>Page Under Construction Coming Soon...</h1>
+			<div class="col-sm-8">
+				<div class="ibox float-e-margins animated fadeInDown">
+					<div class="ibox-title navy-bg text-center">
+						<h5>Logs</h5>
+					</div>
+					<div class="ibox-content" ng-show="!userData.info.logs">
+						<h5 class="text-center">No Log's found</h5>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-hover margin bottom" ng-show="userData.info.logs">
+							<thead>
+								<tr>
+									<th style="width: 20%" class="text-center">#</th>
+									<th>Date</th>
+									<th>IP</th>
+									<th>Latest <i class="fa fa-arrow-up"></i></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="x in userData.info.logs">
+									<td class="text-center">{{ $index + 1 }}</td>
+									<td>{{ x.date }}</td>
+									<td>{{ x.ip }}</td>
+									<td>{{ x.log }}</td>
+								</tr>
+							</tbody>
+						</table>
+						<a class="btn btn-primary btn-block btn-outline" href="#!/logs"><i class="fa fa-eye"></i> View More</a>
+					</div>
 				</div>
 			</div>
 		</div>

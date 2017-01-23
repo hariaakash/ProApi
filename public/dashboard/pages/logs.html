@@ -1,0 +1,39 @@
+<div class="wrapper wrapper-content">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins animated fadeInDown">
+					<div class="ibox-title navy-bg text-center">
+						<h5>Logs</h5>
+					</div>
+					<div class="ibox-content" ng-show="!logsData">
+						<h5 class="text-center">No Log's found</h5>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-hover margin bottom" ng-show="logsData">
+							<thead>
+								<tr>
+									<th style="width: 20%" class="text-center">#</th>
+									<th>Date</th>
+									<th>IP</th>
+									<th>Latest <i class="fa fa-arrow-up"></i></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr dir-paginate="x in logsData | itemsPerPage: pageSize" current-page="currentPage">
+									<td class="text-center">{{ x.no+1 }}</td>
+									<td>{{ x.date }}</td>
+									<td>{{ x.ip }}</td>
+									<td>{{ x.log }}</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="pull-right">
+							<dir-pagination-controls boundary-links="true" template-url="./plugins/pagination/dirPagination.tpl.html"></dir-pagination-controls>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

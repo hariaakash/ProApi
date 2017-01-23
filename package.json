@@ -1,6 +1,6 @@
 {
   "name": "proapi",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -10,12 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
     "express": "^4.14.0",
-    "firebase": "^3.6.4",
+    "extend": "^3.0.0",
     "hat": "0.0.3",
+    "moment-timezone": "^0.5.11",
+    "mongoose": "^4.7.6",
     "morgan": "^1.7.0",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "request-ip": "^1.2.3",
+    "sendgrid": "^4.7.1",
+    "uuid": "^3.0.1"
   }
 }
