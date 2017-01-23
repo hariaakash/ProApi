@@ -1,29 +1,33 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var hat = require('hat');
+var rack = hat.rack();
 
 
 var apiSchema = new Schema({
 	_id: {
 		type: String,
-		default: hat()
+		default: rack()
 	},
 	apiId: {
 		type: String,
-		unique: true
+		unique: true,
+		sparse: true
 	},
 	apiUrl: {
 		type: String,
-		unique: true
+		unique: true,
+		sparse: true
 	},
 	apiType: String,
 	apiName: {
 		type: String,
-		unique: true
+		unique: true,
+		sparse: true
 	},
 	apiKey: {
 		type: String,
-		default: hat()
+		default: rack()
 	},
 	apiStats: {
 		hits: {

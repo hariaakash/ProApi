@@ -2,16 +2,18 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var apiSchema = require('./apis');
 var hat = require('hat');
+var rack = hat.rack();
 
 
 var boxSchema = new Schema({
 	_id: {
 		type: String,
-		default: hat()
+		default: rack()
 	},
 	boxId: {
 		type: String,
-		unique: true
+		unique: true,
+		sparse: true
 	},
 	boxName: {
 		type: String

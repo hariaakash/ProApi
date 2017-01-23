@@ -5,10 +5,6 @@ var Schema = mongoose.Schema;
 
 
 var userSchema = new Schema({
-	_id: {
-		type: String,
-		default: uuidV4()
-	},
 	email: {
 		type: String,
 		unique: true,
