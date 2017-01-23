@@ -8,7 +8,7 @@ angular.module('proApp')
 		if ($scope.logsData.status != true)
 			$http({
 				method: 'GET',
-				url: 'http://localhost:3000/user/logs',
+				url: 'https://proapi.co/user/logs',
 				params: {
 					authKey: $rootScope.authKey
 				}

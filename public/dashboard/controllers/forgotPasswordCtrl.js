@@ -6,7 +6,7 @@ angular.module('proApp')
 			if ($scope.resetEmail) {
 				$http({
 					method: 'GET',
-					url: 'http://localhost:3000/user/password/request',
+					url: 'https://proapi.co/user/password/request',
 					params: {
 						'email': $scope.resetEmail
 					}

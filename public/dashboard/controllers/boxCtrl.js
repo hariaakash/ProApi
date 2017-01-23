@@ -8,7 +8,7 @@ angular.module('proApp')
 			if ($scope.boxData.status != true)
 				$http({
 					method: 'GET',
-					url: 'http://localhost:3000/box',
+					url: 'https://proapi.co/box',
 					params: {
 						authKey: $rootScope.authKey,
 						boxId: $scope.boxId
@@ -55,7 +55,7 @@ angular.module('proApp')
 			if (/^[a-zA-Z]+$/.test($scope.apiId)) {
 				$http({
 					method: 'POST',
-					url: 'http://localhost:3000/apis/create',
+					url: 'https://proapi.co/apis/create',
 					data: $scope.data
 				}).then(function (res) {
 					if (res.data.status == true) {
@@ -105,7 +105,7 @@ angular.module('proApp')
 		$scope.deleteBox = function () {
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/box/delete',
+				url: 'https://proapi.co/box/delete',
 				data: {
 					authKey: $rootScope.authKey,
 					boxId: $scope.boxId
@@ -133,7 +133,7 @@ angular.module('proApp')
 		$scope.deleteApi = function () {
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/apis/delete',
+				url: 'https://proapi.co/apis/delete',
 				data: {
 					authKey: $rootScope.authKey,
 					boxId: $scope.boxId,

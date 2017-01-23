@@ -6,7 +6,7 @@ angular.module('proApp')
 		$scope.loginUser = function () {
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/user/auth',
+				url: 'https://proapi.co/user/auth',
 				data: $scope.user
 			}).then(function (res) {
 				if (res.data.status == true) {

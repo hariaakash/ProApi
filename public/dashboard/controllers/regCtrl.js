@@ -12,7 +12,7 @@ angular.module('proApp')
 				$scope.data.timezone = $scope.user.timezone;
 				$http({
 					method: 'POST',
-					url: 'http://localhost:3000/user/create',
+					url: 'https://proapi.co/user/create',
 					data: $scope.data
 				}).then(function (res) {
 					if (res.data.status == true) {

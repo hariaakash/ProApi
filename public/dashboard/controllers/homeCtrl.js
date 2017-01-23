@@ -5,7 +5,7 @@ angular.module('proApp')
 		$rootScope.signOut = function () {
 			$http({
 				method: 'POST',
-				url: 'http://localhost:3000/user/signout',
+				url: 'https://proapi.co/user/signout',
 				data: {
 					authKey: $rootScope.authKey
 				}
@@ -31,7 +31,7 @@ angular.module('proApp')
 				$scope.box.authKey = $rootScope.authKey;
 				$http({
 					method: 'POST',
-					url: 'http://localhost:3000/box/create',
+					url: 'https://proapi.co/box/create',
 					data: $scope.box
 				}).then(function (res) {
 					if (res.data.status == true) {

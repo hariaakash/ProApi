@@ -6,7 +6,7 @@ angular.module('proApp')
 			if ($scope.code) {
 				$http({
 					method: 'POST',
-					url: 'http://localhost:3000/user/verifyEmail',
+					url: 'https://proapi.co/user/verifyEmail',
 					data: {
 						code: $scope.code,
 						email: $scope.email
@@ -46,7 +46,7 @@ angular.module('proApp')
 				if ($scope.pass1 === $scope.pass2)
 					$http({
 						method: 'POST',
-						url: 'http://localhost:3000/user/password/verify',
+						url: 'https://proapi.co/user/password/verify',
 						data: {
 							code: $scope.code,
 							password: $scope.pass1
