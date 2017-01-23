@@ -1,13 +1,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var hat = require('hat');
-var rack = hat.rack();
 
 
 var apiSchema = new Schema({
 	_id: {
 		type: String,
-		default: rack()
+		default: hat()
 	},
 	apiId: {
 		type: String,
@@ -27,7 +26,7 @@ var apiSchema = new Schema({
 	},
 	apiKey: {
 		type: String,
-		default: rack()
+		default: hat()
 	},
 	apiStats: {
 		hits: {
