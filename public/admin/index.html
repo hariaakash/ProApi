@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>ProApi | Admin Dashboard</title>
+
+	<!--	CSS	-->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	<link href="css/animate.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<link href="plugins/sweetalert2/sweetalert.min.css" rel="stylesheet">
+
+</head>
+
+<body class="top-navigation" ng-app="proApp">
+
+	<div id="wrapper">
+		<div id="page-wrapper" class="gray-bg" ng-controller="globalCtrl">
+
+			<!--	Navbar	-->
+			<div class="row border-bottom white-bg">
+				<nav class="navbar navbar-static-top" role="navigation">
+					<div class="navbar-header">
+						<button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                    <i class="fa fa-reorder"></i>
+                </button>
+						<a href="../" class="navbar-brand">Pro Api</a>
+					</div>
+					<div class="navbar-collapse collapse" id="navbar">
+						<ul class="nav navbar-nav">
+							<li class="active">
+								<a aria-expanded="false" role="button" href="#!/home"> Admin Dashboard</a>
+							</li>
+						</ul>
+						<ul class="nav navbar-top-links navbar-right">
+							<li>
+								<a href="#!/login" ng-show="!signStatus">
+									<i class="fa fa-sign-in"></i> Sign In
+								</a>
+							</li>
+							<li class="dropdown" ng-show="signStatus">
+								<a aria-expanded="false" id="main-avatar" role="button" class="dropdown-toggle" data-toggle="dropdown">
+									<img src="img/user.png" class="img-circle" width="40px" heigth="40px" /> &nbsp;{{ adminData.uname }}&nbsp;<span class="caret"></span></a>
+								<ul role="menu" class="dropdown-menu">
+									<li><a href="#!/profile"><i class="fa fa-user"></i>  Profile</a></li>
+									<div class="divider"></div>
+									<li><a ng-click="signOut()"><i class="fa fa-sign-out"></i>  Sign Out</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+
+			<div ng-view></div>
+
+			<!--	Footer	-->
+			<div class="footer">
+				<!--
+				<div class="pull-right">
+					<strong> Pro Api</strong> - &copy; Copyright 2016
+				</div>
+-->
+				<div class="text-center">
+					<strong>Made with <i class="fa fa-heart fa-blink"></i> in India</strong>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<!--	JS	-->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-route.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="plugins/sweetalert2/sweetalert.min.js"></script>
+	<script src="plugins/js-cookie/js-cookie.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="controllers/homeCtrl.js"></script>
+	<script src="controllers/loginCtrl.js"></script>
+	<script src="plugins/pagination/dirPagination.js"></script>
+	<script src="plugins/pace/pace.min.js"></script>
+</body>
+
+</html>

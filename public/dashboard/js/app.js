@@ -58,7 +58,7 @@ angular.module('proApp')
 			if ($rootScope.userData.status != true)
 				$http({
 					method: 'GET',
-					url: 'http://localhost:3000/user/data',
+					url: 'https://proapi.co/user/data',
 					params: {
 						authKey: $rootScope.authKey
 					}
