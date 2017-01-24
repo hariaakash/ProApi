@@ -20,37 +20,44 @@ app.post('/create', function (req, res) {
 		})
 		.then(function (user) {
 			if (user) {
-				var j = 0;
-				for (i = 0; i < user.boxes.length; i++)
-					if (user.boxes[i].boxId == req.body.boxId)
-						j++;
-				if (j > 0) {
+				if (user.globalStats.boxes < 3) {
+					var j = 0;
+					for (i = 0; i < user.boxes.length; i++)
+						if (user.boxes[i].boxId == req.body.boxId)
+							j++;
+					if (j > 0) {
+						res.json({
+							status: false,
+							msg: 'Entered boxid already exists'
+						});
+					} else {
+						user.boxes.push({
+							boxId: req.body.boxId,
+							boxName: req.body.boxName,
+							logs: [{
+								log: 'Box created',
+								ip: requestIp.getClientIp(req)
+							}]
+						});
+						user.dataBase.push({
+							boxId: req.body.boxId,
+							data: {}
+						});
+						user.globalStats.boxes++;
+						user.logs.push({
+							log: 'Box created with boxId: ' + req.body.boxId,
+							ip: requestIp.getClientIp(req)
+						});
+						user.save();
+						res.json({
+							status: true,
+							msg: 'Box created Successfully'
+						});
+					}
+				} else {
 					res.json({
 						status: false,
-						msg: 'Entered boxid already exists'
-					});
-				} else {
-					user.boxes.push({
-						boxId: req.body.boxId,
-						boxName: req.body.boxName,
-						logs: [{
-							log: 'Box created',
-							ip: requestIp.getClientIp(req)
-							}]
-					});
-					user.dataBase.push({
-						boxId: req.body.boxId,
-						data: {}
-					});
-					user.globalStats.boxes++;
-					user.logs.push({
-						log: 'Box created with boxId: ' + req.body.boxId,
-						ip: requestIp.getClientIp(req)
-					});
-					user.save();
-					res.json({
-						status: true,
-						msg: 'Box created Successfully'
+						msg: 'Only 3 Boxes allowed to create !!'
 					});
 				}
 			} else {

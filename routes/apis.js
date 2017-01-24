@@ -3,6 +3,8 @@ var app = express();
 var bodyParser = require('body-parser');
 var requestIp = require('request-ip');
 var User = require('../models/users');
+var hat = require('hat');
+var rack = hat.rack();
 
 
 app.use(bodyParser.json());
@@ -17,45 +19,53 @@ app.post('/create', function (req, res) {
 		})
 		.then(function (user) {
 			if (user) {
-				for (i = 0; i < user.boxes.length; i++) {
-					if (user.boxes[i].boxId == req.body.boxId)
-						break;
-				}
-				var q = 0;
-				for (j = 0; j < user.boxes[i].apis.length; j++) {
-					if (user.boxes[i].apis[j].apiId == req.body.apiId)
+				if (user.globalStats.apis < 10) {
+					for (i = 0; i < user.boxes.length; i++) {
+						if (user.boxes[i].boxId == req.body.boxId)
+							break;
+					}
+					var q = 0;
+					for (j = 0; j < user.boxes[i].apis.length; j++) {
+						if (user.boxes[i].apis[j].apiId == req.body.apiId)
+							res.json({
+								status: false,
+								msg: 'Entered api ID already exists, choose unique'
+							});
+						else
+							q++;
+					}
+					if (q == user.boxes[i].apis.length) {
+						user.boxes[i].apis.push({
+							apiId: req.body.apiId,
+							apiName: req.body.apiName,
+							apiUrl: req.body.apiUrl,
+							apiType: req.body.apiType,
+							apiKey: rack()
+						});
+						user.logs.push({
+							log: 'API created with ID: ' + req.body.apiId + ' for box with Id: ' + req.body.boxId,
+							ip: requestIp.getClientIp(req)
+						});
+						user.boxes[i].logs.push({
+							log: 'API created with ID: ' + req.body.apiId,
+							ip: requestIp.getClientIp(req)
+						});
+						user.boxes[i].boxStats.apis++;
+						user.globalStats.apis++;
+						user.save();
+						res.json({
+							status: true
+						});
+					} else {
 						res.json({
 							status: false,
-							msg: 'Entered api ID already exists, choose unique'
+							msg: 'boxId not found'
 						});
-					else
-						q++;
-				}
-				if (q == user.boxes[i].apis.length) {
-					user.boxes[i].apis.push({
-						apiId: req.body.apiId,
-						apiName: req.body.apiName,
-						apiUrl: req.body.apiUrl,
-						apiType: req.body.apiType
-					});
-					user.logs.push({
-						log: 'API created with ID: ' + req.body.apiId + ' for box with Id: ' + req.body.boxId,
-						ip: requestIp.getClientIp(req)
-					});
-					user.boxes[i].logs.push({
-						log: 'API created with ID: ' + req.body.apiId,
-						ip: requestIp.getClientIp(req)
-					});
-					user.boxes[i].boxStats.apis++;
-					user.globalStats.apis++;
-					user.save();
-					res.json({
-						status: true
-					});
+					}
 				} else {
 					res.json({
 						status: false,
-						msg: 'boxId not found'
+						msg: 'Only 10 Apis allowed to create !!'
 					});
 				}
 			} else {
@@ -111,7 +121,7 @@ app.post('/delete', function (req, res) {
 			}
 		})
 		.catch(function (err) {
-		console.log(err);
+			console.log(err);
 			res.json({
 				status: false,
 				msg: 'Some error occurred !!'

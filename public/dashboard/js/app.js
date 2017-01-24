@@ -63,7 +63,16 @@ angular.module('proApp')
 						authKey: $rootScope.authKey
 					}
 				}).then(function (res) {
-					$rootScope.userData = res.data;
+					if (res.data.status)
+						$rootScope.userData = res.data;
+					else {
+						swal({
+							title: 'Some error occurred',
+							type: 'error',
+							showConfirmButton: false
+						});
+						Cookies.remove('authKey');
+					}
 				}).catch(function () {
 					swal({
 						title: 'Some error occurred',

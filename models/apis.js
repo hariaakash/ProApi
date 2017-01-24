@@ -1,13 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var hat = require('hat');
 
 
 var apiSchema = new Schema({
-	_id: {
-		type: String,
-		default: hat()
-	},
 	apiId: {
 		type: String,
 		unique: true,
@@ -25,8 +20,7 @@ var apiSchema = new Schema({
 		sparse: true
 	},
 	apiKey: {
-		type: String,
-		default: hat()
+		type: String
 	},
 	apiStats: {
 		hits: {

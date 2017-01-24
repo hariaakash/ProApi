@@ -48,6 +48,7 @@ app.post('/create', function (req, res) {
 				sg.API(request);
 			})
 			.catch(function (err) {
+				console.log(err);
 				res.json({
 					status: false,
 					msg: 'Chosen username / email is already registered !!'

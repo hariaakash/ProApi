@@ -43,6 +43,17 @@ angular.module('proApp')
 		$scope.copySuccess = function () {
 			swal("Success", "Copied to Clipboard", "success");
 		};
+		$scope.openViewApiModal = function (x) {
+			$('#viewApiModal').modal('show');
+			$scope.apiModal = x;
+		};
+		$scope.openDeleteApiModal = function () {
+			$('#viewApiModal').modal('hide');
+			$('#deleteApiModal').modal('show');
+		};
+		$scope.openDeleteBoxModal = function () {
+			$('#deleteBoxModal').modal('show');
+		};
 		$scope.createApi = function () {
 			$scope.data = {
 				authKey: $rootScope.authKey,
@@ -71,6 +82,7 @@ angular.module('proApp')
 							$window.location.reload();
 						}, 2000);
 					} else {
+						$('#createApiModal').modal('hide');
 						swal({
 							title: 'Failed',
 							text: res.data.msg,
@@ -90,17 +102,6 @@ angular.module('proApp')
 					showConfirmButton: true
 				});
 			}
-		};
-		$scope.openViewApiModal = function (x) {
-			$('#viewApiModal').modal('show');
-			$scope.apiModal = x;
-		};
-		$scope.openDeleteApiModal = function () {
-			$('#viewApiModal').modal('hide');
-			$('#deleteApiModal').modal('show');
-		};
-		$scope.openDeleteBoxModal = function () {
-			$('#deleteBoxModal').modal('show');
 		};
 		$scope.deleteBox = function () {
 			$http({

@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var uuidV4 = require('uuid/v4');
 var boxSchema = require('./boxes');
 var Schema = mongoose.Schema;
 
