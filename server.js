@@ -4,6 +4,8 @@ var app = express();
 var morgan = require('morgan');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var subdomain = require('express-subdomain');
+var docs = require('./routes/docs');
 var mongoose = require('mongoose');
 var users = require('./routes/users');
 var boxes = require('./routes/boxes');
@@ -19,6 +21,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(morgan('dev'));
 app.use(cors());
+app.use(subdomain('docs', docs));
 app.use(express.static('public'));
 app.use('/user', users);
 app.use('/box', boxes);
@@ -39,15 +42,6 @@ mongoose.connect('mongodb://127.0.0.1/proapi')
 		console.log('Failed to establish connection with MONGOD !!');
 		console.log(err.message);
 	});
-
-
-app.get('/get', function (req, res) {
-	res.json(req.query);
-});
-
-app.post('/post', function (req, res) {
-	res.json(req.body);
-});
 
 
 app.listen(port);
